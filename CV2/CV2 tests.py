@@ -1,0 +1,22 @@
+import array
+
+g = lambda x, y: y * x
+
+print(g(2,2))
+
+print(g(4,2))
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([80, 85, 90, 95, 100, 105, 110, 115, 120, 125])
+y = np.array([240, 250, 260, 270, 280, 290, 300, 310, 320, 330])
+
+plt.plot(x, y)
+
+plt.plot(x, y)
+
+
+plt.show()
