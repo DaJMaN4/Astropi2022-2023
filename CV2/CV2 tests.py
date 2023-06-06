@@ -7,7 +7,6 @@ print(g(2,2))
 print(g(4,2))
 
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 
