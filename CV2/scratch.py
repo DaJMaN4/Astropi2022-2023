@@ -3,12 +3,6 @@ import numpy as np
 import keyboard
 from matplotlib import pyplot as plt
 
-
-r"""img1 = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image1.jpg', 1)
-img1 = cv.resize(img1,(410,308))
-img2 = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image2.jpg', 1)
-img2 = cv.resize(img2,(410,308))"""
-
 x_offset = 0
 y_offset = 0
 p1 = 0,0
@@ -20,13 +14,12 @@ sift = cv.SIFT_create()
 
 
 for x in range(15):
-    number = 480 - x
+    number = 64 - x
 
     img = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image'+ str(number) +'.jpg', 1)
     img = cv.resize(img, (410, 308)) #(410, 308)
 
     if imglast is not None:
-
         img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         imglast_gray = cv.cvtColor(imglast, cv.COLOR_BGR2GRAY)
         kp1, des1 = sift.detectAndCompute(img_gray, None)
@@ -45,6 +38,10 @@ for x in range(15):
             p1 = kp1[good[num].queryIdx].pt
             p2 = kp2[good[num].trainIdx].pt
 
+            if x_offset + p2[0] - p1[0] < 0 or y_offset + p2[1] - p1[1] < 0:
+                num += 1
+                continue
+
             x_offset_in = int(x_offset + p2[0] - p1[0])
             y_offset_in = int(y_offset + p2[1] - p1[1])
             x_end_in = x_offset_in + img.shape[1]
@@ -56,22 +53,18 @@ for x in range(15):
             imgb[0:y_end_last, 0:x_end_last] = imgb1
             imgb[y_offset_in:y_end_in, x_offset_in:x_end_in] = img
 
-            #vis =  cv.vconcat([img, imglast])
-
             cv.imshow('se', cv.hconcat([img, imglast]))
             cv.imshow('image', imgb)
             cv.waitKey(0)
 
-            #while not keyboard.is_pressed("y"):
-            #    pass
 
-            if keyboard.is_pressed("q"):
+            if keyboard.is_pressed("a"):
                 x_end = x_end_in
                 y_end = y_end_in
                 y_offset = y_offset_in
                 x_offset = x_offset_in
                 break
-            num += 1
+            num -= 1
 
 
     if imglast is None:
@@ -91,36 +84,8 @@ for x in range(15):
     imglast = img
 
 
-
-    #imgb[0:308,0:410] = img2
-#print(type(img1.dtype))
-#img = cv2.addWeighted(img1, 0.3, img2, 0.7, 0)
-
-
 cv.imshow('image', imgb)
 
 cv.waitKey(0)
 print("end")
 
-
-"""if len(good) > 4:
-    src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-    dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-    M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
-    matchesMask = mask.ravel().tolist()
-    h, w = img_gray.shape
-    pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
-    dst = cv.perspectiveTransform(pts, M)
-    out_imglast_gray = cv.polylines(imglast_gray, [np.int32(dst)], True, 255, 3, cv.LINE_AA)
-
-    draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
-                       singlePointColor=None,
-                       matchesMask=matchesMask,  # draw only inliers
-                       flags=2)
-    # print(dst)
-    img3 = cv.drawMatches(img, kp1, out_imglast_gray, kp2, good, None, **draw_params)
-    plt.imshow(img3, 'gray'), plt.show()
-
-else:
-    print("Not enough matches are found - {}/{}".format(len(good), 4))
-    matchesMask = None"""
