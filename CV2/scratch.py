@@ -19,8 +19,8 @@ sift = cv.SIFT_create()
 # find the keypoints and descriptors with SIFT
 
 
-for x in range(4):
-    number = 62 - x
+for x in range(15):
+    number = 480 - x
 
     img = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image'+ str(number) +'.jpg', 1)
     img = cv.resize(img, (410, 308)) #(410, 308)
@@ -45,8 +45,8 @@ for x in range(4):
             p1 = kp1[good[num].queryIdx].pt
             p2 = kp2[good[num].trainIdx].pt
 
-            x_offset_in = int(x_offset + p2[0])
-            y_offset_in = int(y_offset + p2[1])
+            x_offset_in = int(x_offset + p2[0] - p1[0])
+            y_offset_in = int(y_offset + p2[1] - p1[1])
             x_end_in = x_offset_in + img.shape[1]
             y_end_in = y_offset_in + img.shape[0]
 
@@ -56,6 +56,9 @@ for x in range(4):
             imgb[0:y_end_last, 0:x_end_last] = imgb1
             imgb[y_offset_in:y_end_in, x_offset_in:x_end_in] = img
 
+            #vis =  cv.vconcat([img, imglast])
+
+            cv.imshow('se', cv.hconcat([img, imglast]))
             cv.imshow('image', imgb)
             cv.waitKey(0)
 
