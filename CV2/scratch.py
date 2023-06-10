@@ -10,7 +10,7 @@ p2 = 0,0
 imglast = None
 
 sift = cv.SIFT_create()
-# find the keypoints and descriptors with SIFT
+
 
 
 for x in range(15):
@@ -18,6 +18,8 @@ for x in range(15):
 
     img = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image'+ str(number) +'.jpg', 1)
     img = cv.resize(img, (410, 308)) #(410, 308)
+
+    went = False
 
     if imglast is not None:
         img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -39,32 +41,52 @@ for x in range(15):
             p2 = kp2[good[num].trainIdx].pt
 
             if x_offset + p2[0] - p1[0] < 0 or y_offset + p2[1] - p1[1] < 0:
-                num += 1
-                continue
+                if not went:
+                    print("dont work")
+                    went = True
+            else:
+                if int(x_offset + p2[0] - p1[0]) < x_offset + p2[0] - p1[0]:
+                    x_offset_in = int(x_offset + p2[0] - p1[0]) + 1
+                else:
+                    x_offset_in = int(x_offset + p2[0] - p1[0])
 
-            x_offset_in = int(x_offset + p2[0] - p1[0])
-            y_offset_in = int(y_offset + p2[1] - p1[1])
-            x_end_in = x_offset_in + img.shape[1]
-            y_end_in = y_offset_in + img.shape[0]
+                if int(y_offset + p2[1] - p1[1]) < y_offset + p2[1] - p1[1]:
+                    y_offset_in = int(y_offset + p2[1] - p1[1]) + 1
+                else:
+                    y_offset_in = int(y_offset + p2[1] - p1[1])
 
-            print(p1, "space", p2, "Num", num, y_offset, y_offset_in)
+                x_end_in = x_offset_in + img.shape[1]
+                y_end_in = y_offset_in + img.shape[0]
 
-            imgb = np.zeros((y_end_in, x_end_in, 3), dtype=np.uint8)
-            imgb[0:y_end_last, 0:x_end_last] = imgb1
-            imgb[y_offset_in:y_end_in, x_offset_in:x_end_in] = img
+                print(p1, "space", p2, "Num", num, y_offset, y_offset_in)
 
-            cv.imshow('se', cv.hconcat([img, imglast]))
-            cv.imshow('image', imgb)
-            cv.waitKey(0)
+                imgb = np.zeros((y_end_in, x_end_in, 3), dtype=np.uint8)
+                imgb[0:y_end_last, 0:x_end_last] = imgb1
+                imgb[y_offset_in:y_end_in, x_offset_in:x_end_in] = img
 
+                cv.imshow('se', cv.hconcat([img, imglast]))
+                cv.imshow('image', imgb)
+                cv.waitKey(0)
+                went = False
 
             if keyboard.is_pressed("a"):
-                x_end = x_end_in
-                y_end = y_end_in
-                y_offset = y_offset_in
-                x_offset = x_offset_in
-                break
-            num -= 1
+                while keyboard.is_pressed("a"): pass
+                num -= 1
+                if keyboard.is_pressed("s"):
+                    x_end = x_end_in
+                    y_end = y_end_in
+                    y_offset = y_offset_in
+                    x_offset = x_offset_in
+                    break
+            if keyboard.is_pressed("d"):
+                while keyboard.is_pressed("d"): pass
+                num += 1
+                if keyboard.is_pressed("s"):
+                    x_end = x_end_in
+                    y_end = y_end_in
+                    y_offset = y_offset_in
+                    x_offset = x_offset_in
+                    break
 
 
     if imglast is None:
@@ -83,8 +105,12 @@ for x in range(15):
     imgb1 = imgb
     imglast = img
 
+print("phase 1 ended ")
 
-cv.imshow('image', imgb)
+kernel = np.ones((5,5),np.uint8)
+imgb = cv.erode(img, kernel, iterations=1)
+
+cv.imshow('image end', imgb)
 
 cv.waitKey(0)
 print("end")
