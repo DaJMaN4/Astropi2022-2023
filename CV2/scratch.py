@@ -11,8 +11,6 @@ imglast = None
 
 sift = cv.SIFT_create()
 
-
-
 for x in range(15):
     number = 64 - x
 
@@ -107,10 +105,20 @@ for x in range(15):
 
 print("phase 1 ended ")
 
-kernel = np.ones((5,5),np.uint8)
-imgb = cv.erode(img, kernel, iterations=1)
+img = imgb
 
-cv.imshow('image end', imgb)
+kernel = np.ones((5,5),np.uint8)
+img1 = cv.GaussianBlur(img, (7, 7), 0)
+img2 = cv.Canny(img1, 100, 100)
+img3 = cv.dilate(img2, kernel, iterations=1)
+img4 = cv.erode(img3, kernel, iterations=1)
+
+
+cv.imshow('img', img)
+cv.imshow('img1', img1)
+cv.imshow('img2', img2)
+cv.imshow('img3', img3)
+cv.imshow('img4', img4)
 
 cv.waitKey(0)
 print("end")
