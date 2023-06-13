@@ -104,7 +104,9 @@ for x in range(15):
 
 print("phase 1 ended ")
 if (input("save it? y/n :") == "y"):
-    cv.imwrite(input("Name of the file:"), imgb)
+    string = "Work-Photos\\" + input("Name of the file:") + ".png"
+    print(string)
+    cv.imwrite(string, imgb)
 
 
 print("end")
