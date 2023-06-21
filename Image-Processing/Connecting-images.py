@@ -1,7 +1,6 @@
 import cv2 as cv
 import numpy as np
 import keyboard
-from matplotlib import pyplot as plt
 
 x_offset = 0
 y_offset = 0
@@ -12,10 +11,12 @@ imglast = None
 sift = cv.SIFT_create()
 
 for x in range(15):
-    number = 64 - x
+    number = 60 - x
 
-    img = cv.imread(r'C:\Users\damwid001\PycharmProjects\Astropi2022-2023\Data\Image'+ str(number) +'.jpg', 1)
+    img = cv.imread(r'C:\Users\Administrator\PycharmProjects\Astropi2022-2023\Image-Processing\Image'+ str(number) +'.jpg', 1)
     img = cv.resize(img, (410, 308)) #(410, 308)
+
+
 
     went = False
 
@@ -104,22 +105,11 @@ for x in range(15):
     imglast = img
 
 print("phase 1 ended ")
-
-img = imgb
-
-kernel = np.ones((5,5),np.uint8)
-img1 = cv.GaussianBlur(img, (7, 7), 0)
-img2 = cv.Canny(img1, 100, 100)
-img3 = cv.dilate(img2, kernel, iterations=1)
-img4 = cv.erode(img3, kernel, iterations=1)
+if (input("save it? y/n :") == "y"):
+    string = "Work-Photos\\" + input("Name of the file:") + ".png"
+    print(string)
+    cv.imwrite(string, imgb)
 
 
-cv.imshow('img', img)
-cv.imshow('img1', img1)
-cv.imshow('img2', img2)
-cv.imshow('img3', img3)
-cv.imshow('img4', img4)
-
-cv.waitKey(0)
 print("end")
 
